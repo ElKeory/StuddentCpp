@@ -28,3 +28,7 @@
 *.app
 
 Test1/\.vs/
+
+Test1/
+
+Calk/\.vs/
