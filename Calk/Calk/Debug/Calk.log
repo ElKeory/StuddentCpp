@@ -1,3 +1,3 @@
-﻿  Calk.cpp
-c:\users\андрей\desktop\программирование\studentcpp\lab01\test1\calk\calk\calk.cpp(42): error C4700: использована неинициализированная локальная переменная "p"
-c:\users\андрей\desktop\программирование\studentcpp\lab01\test1\calk\calk\calk.cpp(42): error C4700: использована неинициализированная локальная переменная "y"
+﻿  pch.cpp
+  Calk.cpp
+  Calk.vcxproj -> C:\Users\Андрей\Desktop\Программирование\StudentCpp\lab01\Test1\Calk\Debug\Calk.exe
