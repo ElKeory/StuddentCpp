@@ -1,3 +1,0 @@
-﻿  Calk.cpp
-c:\users\андрей\desktop\программирование\studentcpp\lab01\test1\calk\calk\calk.cpp(65): warning C4805: ==: небезопасное смешение типа "int" и типа "bool" в операции
-  Calk.vcxproj -> C:\Users\Андрей\Desktop\Программирование\StudentCpp\lab01\Test1\Calk\Debug\Calk.exe
