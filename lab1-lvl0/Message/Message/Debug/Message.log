@@ -1,0 +1,4 @@
+﻿  Message.cpp
+c:\users\андрей\desktop\программирование\studentcpp\studdentcpp\lab1-lvl0\message\message\message.cpp(7): warning C4326: возвращаемый тип "main" должен быть "int", а не "void"
+c:\users\андрей\desktop\программирование\studentcpp\studdentcpp\lab1-lvl0\message\message\message.cpp(8): warning C4129: : неизвестная escape-последовательность
+  Message.vcxproj -> C:\Users\Андрей\Desktop\Программирование\StudentCpp\StuddentCpp\lab1-lvl0\Message\Debug\Message.exe
