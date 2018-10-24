@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{31D92104-6BC3-4EE8-A97E-1BE4E084BED2}</ProjectGuid>
+    <ProjectGuid>{28E3ECE2-289F-4836-B53C-725049BEBD71}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Calculator</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
