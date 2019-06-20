@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include <iostream>
-#include <map>
 #include <fstream>
+#include <map>
 #include <string>
 #include <windows.h>
 
@@ -14,91 +14,110 @@ void Oper_Mode(map<string, string>& dictionary);
 void Angl_Dictionary();
 void Rus_Dictionary();
 
-//template<class T1, class T2>
-//class MyMap
-//{
-//	T1* key;
-//	T2* value;
-//	size_t _size = 0;
-//
-//private:
-//	void resize(size_t new_size) 
-//	{
-//		_size = new_size;
-//		key = static_cast<T1*>(realloc(key, _size * sizeof(T1)));
-//		value = static_cast<T2*>(realloc(value, _size * sizeof(T2)));
-//	}
-//
-//public:
-//	MyMap()
-//	{
-//		_size = 4;
-//		key = new T1[_size];
-//		value = new T2[_size];
-//	}
-//
-//	~MyMap()
-//	{
-//		delete[] key;
-//		delete[] value;
-//	}
-//
-//	bool key_comp(T1 _key) 
-//	{
-//		for (int i = 0; i < _size; i++)
-//		{
-//			if (key[i] == _key)
-//				return true;
-//			else
-//				return false;
-//		}
-//	}
-//
-//	bool value_comp(T2 _value) 
-//	{
-//		for (int i = 0; i < _size; i++)
-//		{
-//			if (value[i] == _value)
-//				return true;
-//			else
-//				return false;
-//		}
-//	}
-//
-//	T2 find(T1 _key) 
-//	{
-//		for (int i = 0; i < _size; i++)
-//			if (key[i] == _key)
-//				return value[i];
-//
-//		return NULL;
-//	}
-//
-//	template <class T1, class T2>
-//	ostream& operator<<(ostream& out, MyMap<T1, T2>& it)
-//	{
-//		for (auto& value : it)
-//		{
-//			out << value;
-//			if (&value < it.end() - 1)
-//				out << ' ';
-//		}
-//		return out;
-//	}
-//
-//	template <class T1, class T2>
-//	void operator>>(istream& in, MyMap<T1, T2>& it)
-//	{
-//		it.clear();
-//		T2 value;
-//		while (in >> value)
-//		{
-//			it.insert(value);
-//			if (in.peek() == '\n')
-//				break;
-//		}
-//	}
-//};
+template<class T1, class T2>
+class MyMap
+{
+	T1* key;
+	T2* value;
+	size_t _size;
+	size_t _length;
+
+private:
+	void resize(size_t new_size) 
+	{
+		_size = new_size;
+		key = static_cast<T1*>(realloc(key, _size * sizeof(T1)));
+		value = static_cast<T2*>(realloc(value, _size * sizeof(T2)));
+	}
+public:
+	MyMap()
+	{
+		_size = 4;
+		_leghth = 0;
+		key = new T1[_size];
+		value = new T2[_size];
+	}
+
+	~MyMap()
+	{
+		delete[] key;
+		delete[] value;
+	}
+
+	void emplace(const T1 _key, const T2 _value)
+	{
+		if (_length + 1 > _size) 
+			resize(_size * 2);
+
+		if (key_comp)
+			key[_length++] = _key;
+		else
+			cout << "Такое слово уже используется.\n"
+
+		if(value_comp)
+			value[_length++] = _value;
+		else		
+			cout << "Такое слово уже используется.\n"
+	}
+
+	template<class T1, class T2>
+	bool key_comp(T1 _key) 
+	{
+		for (int i = 0; i < _size; i++)
+		{
+			if (key[i] == _key)
+				return true;
+			else
+				return false;
+		}
+	}
+
+	template<class T1, class T2>
+	bool value_comp(T2 _value) 
+	{
+		for (int i = 0; i < _size; i++)
+		{
+			if (value[i] == _value)
+				return true;
+			else
+				return false;
+		}
+	}
+
+	T2 find(T1 _key) 
+	{
+		for (int i = 0; i < _size; i++)
+			if (key[i] == _key)
+				return value[i];
+
+		return NULL;
+	}
+
+	template <class T1, class T2>
+	friend ostream& operator<<(ostream& out, MyMap<T1, T2>& it)
+	{
+		out.clear();
+		for (auto& value : it)
+		{
+			out << value;
+			if (&value < it.end() - 1)
+				out << ' ';
+		}
+		return out;
+	}
+
+	template <class T1, class T2>
+	friend void operator>>(istream& in, MyMap<T1, T2>& it)
+	{
+		T2 _value;
+		while (in >> _value)
+		{
+			it.emplace(_value);
+			if (in.peek() == '\n')
+				break;
+		}
+	}
+};
 
 int main()
 {
@@ -109,7 +128,7 @@ int main()
 
 	Oper_Mode(dictionary);
 
-	return 0;
+	return NULL;
 }
 
 void Input_Words(map<string, string>& dictionary)
@@ -198,7 +217,7 @@ void Oper_Mode(map<string, string>& dictionary)
 void Angl_Dictionary()
 {
 	ifstream fileA("fileA.txt");
-	
+	map<string, string> D_Eng;
 	if (!fileA.is_open())
 	{
 		cout << "Файл с Англо-Русским словарём не найден.\n";
@@ -206,16 +225,6 @@ void Angl_Dictionary()
 	}
 	else
 	{
-		map<string, string> D_Eng;
-		while (!fileA.eof)
-		{
-			string key, value;
-			while (fileA)
-			{
-				getline(fileA, key);
-			}
-		}
-
 		cout << "Введите слово на английском.\n";
 		string w1;
 		cin >> w1;
@@ -227,9 +236,8 @@ void Angl_Dictionary()
 
 void Rus_Dictionary()
 {
-	map<string, string> D_Rus;
-
 	ifstream fileR("fileR.txt");
+	map<string, string> D_Rus;
 	if (!fileR.is_open())
 	{
 		cout << "Файл с Русско-Английским словарём не найден.\n";
