@@ -1,5 +1,5 @@
 ﻿  Task 1.cpp
 c:\users\андрей\desktop\программирование\studdentcpp\lab3-lvl1\task 1\task 1\task 1.cpp(57): warning C4267: инициализация: преобразование из "size_t" в "ctr"; возможна потеря данных
-c:\users\андрей\desktop\программирование\studdentcpp\lab3-lvl1\task 1\task 1\task 1.cpp(117): warning C4715: priority: значение возвращается не при всех путях выполнения
 c:\users\андрей\desktop\программирование\studdentcpp\lab3-lvl1\task 1\task 1\task 1.cpp(128): warning C4715: apply: значение возвращается не при всех путях выполнения
+c:\users\андрей\desktop\программирование\studdentcpp\lab3-lvl1\task 1\task 1\task 1.cpp(117): warning C4715: priority: значение возвращается не при всех путях выполнения
   Task 1.vcxproj -> C:\Users\Андрей\Desktop\Программирование\StuddentCpp\lab3-lvl1\Task 1\Debug\Task 1.exe
