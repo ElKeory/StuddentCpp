@@ -24,7 +24,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pushButton_7,SIGNAL(clicked()),this,SLOT(Changed()));
     connect(ui->pushButton_8,SIGNAL(clicked()),this,SLOT(Changed()));
     connect(ui->pushButton_9,SIGNAL(clicked()),this,SLOT(Changed()));
-
     connect(ui->pushButton_plus,SIGNAL(clicked()),this,SLOT(Changed()));
     connect(ui->pushButton_minus,SIGNAL(clicked()),this,SLOT(Changed()));
     connect(ui->pushButton_multiply,SIGNAL(clicked()),this,SLOT(Changed()));
@@ -35,7 +34,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pushButton_log,SIGNAL(clicked()),this,SLOT(Changed()));
     connect(ui->pushButton_log_n,SIGNAL(clicked()),this,SLOT(Changed()));
     connect(ui->pushButton_ln,SIGNAL(clicked()),this,SLOT(Changed()));
-
     connect(ui->pushButton_clear_all,SIGNAL(clicked()),this,SLOT(Changed()));
     connect(ui->pushButton_clear_last,SIGNAL(clicked()),this,SLOT(Changed()));
     connect(ui->pushButton_result,SIGNAL(clicked()),this,SLOT(Changed()));
@@ -51,83 +49,73 @@ MainWindow::~MainWindow()
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
-    str = ui->result_window->text();
+    QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+
+    if(keyEvent->modifiers() & Qt::ShiftModifier && keyEvent->key() == Qt::Key_Z)
+    {
+          undo();
+          return true;
+    }
 
     if(event->type() == QEvent::KeyPress)
     {
-        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-
         switch(keyEvent->key())
         {
         case Qt::Key_0:
-            str.push_back("0");
-            ui->result_window->setText(str);
+            add_0();
             return true;
 
         case Qt::Key_1:
-            str.push_back("1");
-            ui->result_window->setText(str);
+            add_1();
             return true;
 
         case Qt::Key_2:
-            str.push_back("2");
-            ui->result_window->setText(str);
+            add_2();
             return true;
 
         case Qt::Key_3:
-            str.push_back("3");
-            ui->result_window->setText(str);
+            add_3();
             return true;
 
         case Qt::Key_4:
-            str.push_back("4");
-            ui->result_window->setText(str);
+            add_4();
             return true;
 
         case Qt::Key_5:
-            str.push_back("5");
-            ui->result_window->setText(str);
+            add_5();
             return true;
 
         case Qt::Key_6:
-            str.push_back("6");
-            ui->result_window->setText(str);
+            add_6();
             return true;
 
         case Qt::Key_7:
-            str.push_back("7");
-            ui->result_window->setText(str);
+            add_7();
             return true;
 
         case Qt::Key_8:
-            str.push_back("8");
-            ui->result_window->setText(str);
+            add_8();
             return true;
 
         case Qt::Key_9:
-            str.push_back("9");
-            ui->result_window->setText(str);
+            add_9();
             return true;
 
         case Qt::Key_Plus:
-            str.push_back("+");
-            ui->result_window->setText(str);
+            add_plus();
             return true;
 
         case Qt::Key_Minus:
-            str.push_back("-");
-            ui->result_window->setText(str);
+            add_minus();
             return true;
 
-        case Qt::Key_multiply: //!
-            str.push_back("*");
-            ui->result_window->setText(str);
+        case Qt::Key_Asterisk:
+            add_multiply();
             return true;
 
-        case Qt::Key_division: //!
-            str.push_back("÷");
-            ui->result_window->setText(str);
-            return true;
+        case Qt::Key_Slash:
+            add_divide();
+            return true;  
 
         case Qt::Key_Equal:
             result();
@@ -140,9 +128,6 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
         case Qt::Key_Backspace:
             clear_last();
             return true;
-
-        default:
-            return true;
         }
     }
 
@@ -151,14 +136,26 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
     return QMainWindow::eventFilter(watched, event);
 }
 
+void MainWindow::undo()
+{
+    for(int i = 0; i < str2.size(); i++)
+    {
+        str[i] = str2[i];
+    }
+    ui->result_window->setText(str);
+}
+
 void MainWindow::clear_all()
 {
-    formatFlag = false;
-
     str = "";
+    str2 = "";
+    str_f = "";
 
-    ui->result_window->setText("");
+    point = true;
+    oper = true;
+
     ui->show_result->setText("");
+    ui->result_window->setText("");    
 
     ui->show_result->hide();
     ui->result_window->show();
@@ -166,27 +163,22 @@ void MainWindow::clear_all()
 
 void MainWindow::clear_last()
 {
-    str.truncate(str.length() - 1);
+    str.chop(1);
+    str_f.chop(1);
     ui->result_window->setText(str);
 }
 
 void MainWindow::result()
-{
+{   
     bool FoundOp = true;
 
-    if(ui->result_window->text().isEmpty())
-    {
+    if(ui->result_window->text().isEmpty())   
         return;
-    }
 
     ui->show_result->show();
     ui->result_window->hide();
 
-    formatFlag = true;
-
     double n1,n2,ans;
-
-    str = ui->result_window->text();
 
     if(str.contains('+'))
     {
@@ -214,14 +206,11 @@ void MainWindow::result()
         n1 = str.split("÷")[0].toDouble();
         n2 = str.split("÷")[1].toDouble();
 
-        if(n2 == 0) //!
-        {
+        if(n2 == 0) //!        
             ui->show_result->setText("Err");
-        }
-        else
-        {
-            ans = n1/n2;
-        }
+
+        else ans = n1/n2;
+
     }
     elif(str.contains('^'))
     {
@@ -234,14 +223,11 @@ void MainWindow::result()
     {
         n1 = str.split("√")[1].toDouble();
 
-        if(n1 < 0)
-        {
+        if(n1 < 0)        
             ui->show_result->setText("Err");
-        }
-        else
-        {
-            ans = sqrt(n1);
-        }
+
+        else ans = sqrt(n1);
+
     }
     elif(str.contains("sqrtn")) //!
     {
@@ -249,39 +235,30 @@ void MainWindow::result()
         n2 = str.split("sqrtn")[0].toDouble();
 
         if(n2 == 0)
-        {
             ui->show_result->setText("Err");
-        }
+
 
         if(fmod(n1, 2) == 0)
         {
 
-            if(n1 < 0)
-            {
+            if(n1 < 0)           
                 ui->show_result->setText("Err");
-            }
-            else
-            {
-                ans = qPow(n1, (1/n2));
-            }
+
+            else ans = qPow(n1, (1/n2));
+
         }
-        else
-        {
-            ans = qPow(n1, (1/n2));
-        }
+        else ans = qPow(n1, (1/n2));
+
     }
     elif(str.contains("log")) //!
     {
         n1 = str.split("log")[1].toDouble();
 
-        if(n1 < 1)
-        {
+        if(n1 < 1)        
             ui->show_result->setText("Err");
-        }
-        else
-        {
-            ans = qLn(n1) / qLn(2);
-        }
+
+        else ans = qLn(n1) / qLn(2);
+
     }
     elif(str.contains("lgn")) //!
     {
@@ -289,226 +266,422 @@ void MainWindow::result()
         n2 = str.split("lgn")[0].toDouble();
 
         if(n1 < 1)
-        {
             ui->show_result->setText("Err");
-        }
+
         elif(n2 < 0 && n2 == 1)
-        {
-            ui->show_result->setText("Err");
-        }
-        else
-        {
-            ans = qLn(n1) / qLn(n2);
-        }
+                ui->show_result->setText("Err");
+
+        else ans = qLn(n1) / qLn(n2);
+
     }
     elif(str.contains("ln")) //!
     {
         n1 = str.split("ln")[1].toDouble();
 
         if(n1 < 1)
-        {
             ui->show_result->setText("Err");
-        }
-        else
-        {
-            ans = qLn(n1);
-        }
+
+        else ans = qLn(n1);
     }
-    else
-    {
-        FoundOp = false;
-    }
+    else FoundOp = false;
+
     if(FoundOp)
-    {
         ui->show_result->setText(QString::number(ans));
-    }
-    else
-    {
-        ui->show_result->setText(str);
-    }
 }
 
 void MainWindow::Changed()
 {
-    str = ui->result_window->text();
+    str2 = str;
 
     QObject *obj;
     obj = sender();
 
-    if(obj == ui->pushButton_clear_all)
+    if(obj == ui->pushButton_clear_all) clear_all();
+
+    elif(obj == ui->pushButton_clear_last) clear_last();
+
+    elif(obj == ui->pushButton_result) result();
+
+    else setText(obj);
+
+    ui->result_window->setText(str_f);
+}
+
+void MainWindow::add_0()
+{
+    if(str.contains("sqrtn"))
     {
-        clear_all();
+        str.push_front("0");
+        str_f.push_front("0");
     }
-    elif(obj == ui->pushButton_clear_last)
+    elif(str.contains("lgn"))
     {
-        clear_last();
+        str.push_front("0");
+        str_f.insert(3 ,"<sub>0</sub>");
     }
-    elif(obj == ui->pushButton_result)
+    elif(str.contains("^"))
     {
-        result();
-    }
-    elif(obj == ui->pushButton_dot)
-    {
-        str.push_back(".");
+        str.push_back("0");
+        str_f.push_back("<sup>0</sup>");
     }
     else
     {
-        setText(obj);
+        str.push_back("0");
+        str_f.push_back("0");
+    }
+    ui->result_window->setText(str_f);
+}
+
+void MainWindow::add_1()
+{
+    if(str.contains("sqrtn"))
+    {
+        str.push_front("1");
+        str_f.push_front("<sup>1</sup>");
+    }
+    elif(str.contains("lgn"))
+    {
+        str.push_front("1");
+        str_f.insert(3 ,"<sub>1</sub>");
+    }
+    elif(str.contains("^"))
+    {
+        str.push_back("1");
+        str_f.push_back("<sup>1</sup>");
+    }
+    else
+    {
+        str.push_back("1");
+        str_f.push_back("1");
+    }
+    ui->result_window->setText(str_f);
+}
+
+void MainWindow::add_2()
+{
+    if(str.contains("sqrtn"))
+    {
+        str.push_front("2");
+        str_f.push_front("<sup>2</sup>");
+    }
+    elif(str.contains("lgn"))
+    {
+        str.push_front("2");
+        str_f.insert(3 ,"<sub>2</sub>");
+    }
+    elif(str.contains("^"))
+    {
+        str.push_back("2");
+        str_f.push_back("<sup>2</sup>");
+    }
+    else
+    {
+        str.push_back("2");
+        str_f.push_back("2");
+    }
+    ui->result_window->setText(str_f);
+}
+
+void MainWindow::add_3()
+{
+    if(str.contains("sqrtn"))
+    {
+        str.push_front("3");
+        str_f.push_front("<sup>3</sup>");
+    }
+    elif(str.contains("lgn"))
+    {
+        str.push_front("3");
+        str_f.insert(3 ,"<sub>3</sub>");
+    }
+    elif(str.contains("^"))
+    {
+        str.push_back("3");
+        str_f.push_back("<sup>3</sup>");
+    }
+    else
+    {
+        str.push_back("3");
+        str_f.push_back("3");
     }
 
-    ui->result_window->setText(str);
+    ui->result_window->setText(str_f);
+}
+
+void MainWindow::add_4()
+{
+    if(str.contains("sqrtn"))
+    {
+        str.push_front("4");
+        str_f.push_front("<sup>4</sup>");
+    }
+    elif(str.contains("lgn"))
+    {
+        str.push_front("4");
+        str_f.insert(3 ,"<sub>4</sub>");
+    }
+    elif(str.contains("^"))
+    {
+        str.push_back("4");
+        str_f.push_back("<sup>4</sup>");
+    }
+    else
+    {
+        str.push_back("4");
+        str_f.push_back("4");
+    }
+    ui->result_window->setText(str_f);
+}
+
+void MainWindow::add_5()
+{
+    if(str.contains("sqrtn"))
+    {
+        str.push_front("5");
+        str_f.push_front("<sup>5</sup>");
+    }
+    elif(str.contains("lgn"))
+    {
+        str.push_front("5");
+        str_f.insert(3 ,"<sub>5</sub>");
+    }
+    elif(str.contains("^"))
+    {
+        str.push_back("5");
+        str_f.push_back("<sup>5</sup>");
+    }
+    else
+    {
+        str.push_back("5");
+        str_f.push_back("5");
+    }
+    ui->result_window->setText(str_f);
+}
+
+void MainWindow::add_6()
+{
+    if(str.contains("sqrtn"))
+    {
+        str.push_front("6");
+        str_f.push_front("<sup>6</sup>");
+    }
+    elif(str.contains("lgn"))
+    {
+        str.push_front("6");
+        str_f.insert(3 ,"<sub>6</sub>");
+    }
+    elif(str.contains("^"))
+    {
+        str.push_back("6");
+        str_f.push_back("<sup>6</sup>");
+    }
+    else
+    {
+        str.push_back("6");
+        str_f.push_back("6");
+    }
+    ui->result_window->setText(str_f);
+}
+
+void MainWindow::add_7()
+{
+    if(str.contains("sqrtn"))
+    {
+        str.push_front("7");
+        str_f.push_front("<sup>7</sup>");
+    }
+    elif(str.contains("lgn"))
+    {
+        str.push_front("7");
+        str_f.insert(3 ,"<sub>7</sub>");
+    }
+    elif(str.contains("^"))
+    {
+        str.push_back("7");
+        str_f.push_back("<sup>7</sup>");
+    }
+    else
+    {
+        str.push_back("7");
+        str_f.push_back("7");
+    }
+    ui->result_window->setText(str_f);
+}
+
+void MainWindow::add_8()
+{
+    if(str.contains("sqrtn"))
+    {
+        str.push_front("8");
+        str_f.push_front("<sup>8</sup>");
+    }
+    elif(str.contains("lgn"))
+    {
+        str.push_front("8");
+        str_f.insert(3 ,"<sub>8</sub>");
+    }
+    elif(str.contains("^"))
+    {
+        str.push_back("8");
+        str_f.push_back("<sup>8</sup>");
+    }
+    else
+    {
+        str.push_back("8");
+        str_f.push_back("8");
+    }
+    ui->result_window->setText(str_f);
+}
+
+void MainWindow::add_9()
+{
+    if(str.contains("sqrtn"))
+    {
+        str.push_front("9");
+        str_f.push_front("<sup>9</sup>");
+    }
+    elif(str.contains("lgn"))
+    {
+        str.push_front("9");
+        str_f.insert(3 ,"<sub>9</sub>");
+    }
+    elif(str.contains("^"))
+    {
+        str.push_back("9");
+        str_f.push_back("<sup>9</sup>");
+    }
+    else
+    {
+        str.push_back("9");
+        str_f.push_back("9");
+    }
+    ui->result_window->setText(str_f);
+}
+
+void MainWindow::add_dot()
+{
+    if(str.contains("sqrtn"))
+    {
+        str.push_front(".");
+        str_f.push_front("<sup>.</sup>");
+    }
+    elif(str.contains("lgn"))
+    {
+        str.push_front(".");
+        str_f.insert(3 ,"<sub>.</sub>");
+    }
+    elif(str.contains("^"))
+    {
+        str.push_back(".");
+        str_f.push_back("<sup>.</sup>");
+    }
+    else
+    {
+        str.push_back(".");
+        str_f.push_back(".");
+    }
+    ui->result_window->setText(str_f);
+}
+
+void MainWindow::add_multiply()
+{
+    str.push_back("*");
+    str_f.push_back("*");
+}
+
+void MainWindow::add_divide()
+{
+    str.push_back("÷");
+    str_f.push_back("÷");
+}
+
+void MainWindow::add_plus()
+{
+    str.push_back("+");
+    str_f.push_back("+");
+}
+
+void MainWindow::add_minus()
+{
+    str.push_back("-");
+    str_f.push_back("-");
+}
+
+void MainWindow::add_extent()
+{
+    str.push_back("^");
 }
 
 void MainWindow::setText(QObject *obj)
-{
-    if(obj == ui->pushButton_0)
+{     
+    if(obj == ui->pushButton_0) add_0();
+    elif(obj == ui->pushButton_1) add_1();
+    elif(obj == ui->pushButton_2) add_2();
+    elif(obj == ui->pushButton_3) add_3();
+    elif(obj == ui->pushButton_4) add_4();
+    elif(obj == ui->pushButton_5) add_5();
+    elif(obj == ui->pushButton_6) add_6();
+    elif(obj == ui->pushButton_7) add_7();
+    elif(obj == ui->pushButton_8) add_8();
+    elif(obj == ui->pushButton_9) add_9();
+    elif(obj == ui->pushButton_dot && point)
     {
-        if(str.contains("sqrtn") || str.contains("lgn"))
-        {
-            str.push_front("0");
-        }
-        else
-        {
-            str.push_back("0");
-        }
+        add_dot();
+        point = false;
     }
-    elif(obj == ui->pushButton_1)
+    elif(obj == ui->pushButton_multiply && oper)
     {
-        if(str.contains("sqrtn") || str.contains("lgn"))
-        {
-            str.push_front("1");
-        }
-        else
-        {
-            str.push_back("1");
-        }
+        add_multiply();
+        oper = false;
     }
-    elif(obj == ui->pushButton_2)
+    elif(obj == ui->pushButton_divide && oper)
     {
-        if(str.contains("sqrtn") || str.contains("lgn"))
-        {
-            str.push_front("2");
-        }
-        else
-        {
-            str.push_back("2");
-        }
+        add_divide();
+        oper = false;
     }
-    elif(obj == ui->pushButton_3)
+    elif(obj == ui->pushButton_extent && oper)
     {
-        if(str.contains("sqrtn") || str.contains("lgn"))
-        {
-            str.push_front("3");
-        }
-        else
-        {
-            str.push_back("3");
-        }
+        add_extent();
+        oper = false;
     }
-    elif(obj == ui->pushButton_4)
+    elif(obj == ui->pushButton_plus && oper)
     {
-        if(str.contains("sqrtn") || str.contains("lgn"))
-        {
-            str.push_front("4");
-        }
-        else
-        {
-            str.push_back("4");
-        }
+        add_plus();
+        oper = false;
     }
-    elif(obj == ui->pushButton_5)
+    elif(obj == ui->pushButton_minus && oper)
     {
-        if(str.contains("sqrtn") || str.contains("lgn"))
-        {
-            str.push_front("5");
-        }
-        else
-        {
-            str.push_back("5");
-        }
+        add_minus();
+        oper = false;
     }
-    elif(obj == ui->pushButton_6)
-    {
-        if(str.contains("sqrtn") || str.contains("lgn"))
-        {
-            str.push_front("6");
-        }
-        else
-        {
-            str.push_back("6");
-        }
-    }
-    elif(obj == ui->pushButton_7)
-    {
-        if(str.contains("sqrtn") || str.contains("lgn"))
-        {
-            str.push_front("7");
-        }
-        else
-        {
-            str.push_back("7");
-        }
-    }
-    elif(obj == ui->pushButton_8)
-    {
-        if(str.contains("sqrtn") || str.contains("lgn"))
-        {
-            str.push_front("8");
-        }
-        else
-        {
-            str.push_back("8");
-        }
-    }
-    elif(obj == ui->pushButton_9)
-    {
-        if(str.contains("sqrtn") || str.contains("lgn"))
-        {
-            str.push_front("9");
-        }
-        else
-        {
-            str.push_back("9");
-        }
-    }
-    elif(obj == ui->pushButton_multiply)
-    {
-        str.push_back("*");
-    }
-    elif(obj == ui->pushButton_divide)
-    {
-        str.push_back("÷");;
-    }
-    elif(obj == ui->pushButton_extent)
-    {
-        str.push_back("^");
-    }
-    elif(obj == ui->pushButton_plus)
-    {
-        str.push_back("+");
-    }
-    elif(obj == ui->pushButton_minus)
-    {
-        str.push_back("-");
-    }
-    elif(obj == ui->pushButton_root)
+    elif(obj == ui->pushButton_root && oper)
     {
         str.push_front("√");
+        str_f.push_front("√");
+        oper = false;
     }
-    elif(obj == ui->pushButton_root_n)
+    elif(obj == ui->pushButton_root_n && oper)
     {
         str.push_front("sqrtn");
+        str_f.push_front("√");
+        oper = false;
     }
-    elif(obj == ui->pushButton_log)
+    elif(obj == ui->pushButton_log && oper)
     {
         str.push_front("log");
+        str_f.push_front("log<sub>2</sub>");
+        oper = false;
     }
-    elif(obj == ui->pushButton_log_n)
+    elif(obj == ui->pushButton_log_n && oper)
     {
         str.push_front("lgn");
+        str_f.push_front("log");
+        oper = false;
     }
-    elif(obj == ui->pushButton_ln)
+    elif(obj == ui->pushButton_ln && oper)
     {
         str.push_front("ln");
+        str_f.push_front("ln");
+        oper = false;
     }
 }
