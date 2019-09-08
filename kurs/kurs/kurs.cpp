@@ -40,7 +40,7 @@ private:
 	pair* pairs;
 
 public:
-	MyMap() : size(1), length(0);
+	MyMap() : size(1), length(0)
 	{
 		pairs = pair[size];
 	}
@@ -52,7 +52,7 @@ public:
 
 	bool un(Key key)
 	{
-		for (int i = 0; i < len; i++)
+		for (int i = 0; i < length; i++)
 		{
 			if (pairs[i].key == key)
 			{
@@ -67,7 +67,7 @@ public:
 	{
 		if (!un(key))
 		{
-			if (len == size)
+			if (length == size)
 			{
 				pair* old = pairs;
 				pairs = new pair[size * 2];
@@ -80,7 +80,7 @@ public:
 		pair temp;
 		temp.key = key;
 		temp.value = value;
-		pairs[len++] = temp;
+		pairs[length++] = temp;
 	}
 
 	friend ostream& operator<<(ostream& out, MyMap& a)
@@ -108,7 +108,7 @@ public:
 
 	Value& operator[](Key key)
 	{
-		for (int i = 0; i < len; i++) 
+		for (int i = 0; i < length; i++)
 		{
 			if (pairs[i].key == key)
 			{
@@ -123,9 +123,9 @@ public:
 		ofstream out;
 		out.open("Dictionary.txt");
 
-		for (int i = 0; i < len; i++)
+		for (int i = 0; i < length; i++)
 		{
-			if (i == len - 1)
+			if (i == length - 1)
 			{
 				out << pairs[i].key << endl << pairs[i].value;
 			}
@@ -172,8 +172,5 @@ int main()
 
 	MyMap<string, string> dictionary;
 
-	cout << "Выберите режим работы словаря\n" >>
-		>> "1" >>
-		>> "2" >>
-		>> "3" >>
+	cout << "Выберите режим работы словаря\n";
 }
