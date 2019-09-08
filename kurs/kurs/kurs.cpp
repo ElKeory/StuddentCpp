@@ -2,23 +2,24 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <Windows.h>
 
 using namespace std;
 
-class words
+class Dictionary
 {
 public:
 	string KeyW, ValueW;
 
-	friend ostream& operator<<(ostream& out, words& w)
+	friend ostream& operator<<(ostream& out, Dictionary& w)
 	{
 		out << w.KeyW << " " << w.ValueW;
 		return out;
 	}
 
-	friend istream& operator>>(istream& in, words& w)
+	friend istream& operator>>(istream& in, Dictionary& w)
 	{
-		in >> w.KeyW << w.ValueW;
+		in >> w.KeyW >> w.ValueW;
 		return in;
 	}
 
@@ -42,7 +43,7 @@ private:
 public:
 	MyMap() : size(1), length(0)
 	{
-		pairs = pair[size];
+		pairs = new pair[size];
 	}
 
 	~MyMap()
@@ -56,16 +57,16 @@ public:
 		{
 			if (pairs[i].key == key)
 			{
-				return true;
+				return false;
 			}
 		}
 
-		return false;
+		return true;
 	}
 
 	void insert(Key key, Value value)
 	{
-		if (!un(key))
+		if (un(key))
 		{
 			if (length == size)
 			{
@@ -119,7 +120,6 @@ public:
 
 	void save()
 	{
-
 		ofstream out;
 		out.open("Dictionary.txt");
 
@@ -146,7 +146,7 @@ public:
 
 		if (!in)
 		{
-			cout << "Не найдет файл словаря" << endl;
+			cout << "Не найден файл словаря" << endl;
 		}
 		else
 		{
@@ -168,9 +168,33 @@ public:
 
 int main()
 {
-	setlocale(2, "Rus");
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
 
 	MyMap<string, string> dictionary;
 
-	cout << "Выберите режим работы словаря\n";
+	dictionary.download();
+
+	cout << "Выберите режим работы словаря:\n" << "1. Англо-Русский.\n" << "2. Русско-Английский.\n" << "3. Ввод слов.\n";
+	int c;
+	cin >> c;
+
+	switch (c)
+	{
+	case 1:
+		break;
+
+	case 2:
+		break;
+
+	case 3: cin >> dictionary;
+		break;
+
+	default: cout << "error\n";
+	}
+
+	dictionary.save();
+
+	system("pause");
+	return 0;
 }

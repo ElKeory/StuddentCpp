@@ -1,2 +1,2 @@
 ﻿  kurs.cpp
-c:\users\андрей\desktop\программирование\studdentcpp\kurs\kurs\kurs.cpp(21): error C2676: бинарный "<<": "std::basic_istream<char,std::char_traits<char>>" не определяет этот оператор или преобразование к типу приемлемо к встроенному оператору
+  kurs.vcxproj -> C:\Users\Андрей\Desktop\Программирование\StuddentCpp\kurs\Debug\kurs.exe
