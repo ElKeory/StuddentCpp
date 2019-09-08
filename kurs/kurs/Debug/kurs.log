@@ -1,0 +1,13 @@
+﻿  pch.cpp
+  kurs.cpp
+c:\users\андрей\desktop\программирование\studdentcpp\kurs\kurs\kurs.cpp(23): error C2760: синтаксическая ошибка: ожидался токен "{", а не ";"
+  c:\users\андрей\desktop\программирование\studdentcpp\kurs\kurs\kurs.cpp(50): note: выполняется компиляция ссылки на экземпляр шаблон класс "MyMap<Key,Value>"
+c:\users\андрей\desktop\программирование\studdentcpp\kurs\kurs\kurs.cpp(24): error C2059: синтаксическая ошибка: {
+c:\users\андрей\desktop\программирование\studdentcpp\kurs\kurs\kurs.cpp(24): error C2334: непредвиденные лексемы перед "{"; пропуск вероятного тела функции
+c:\users\андрей\desktop\программирование\studdentcpp\kurs\kurs\kurs.cpp(38): error C2059: синтаксическая ошибка: )
+c:\users\андрей\desktop\программирование\studdentcpp\kurs\kurs\kurs.cpp(39): error C2143: синтаксическая ошибка: отсутствие ")" перед "{"
+c:\users\андрей\desktop\программирование\studdentcpp\kurs\kurs\kurs.cpp(39): error C2805: бинарный "operator <<" имеет слишком мало параметров
+c:\users\андрей\desktop\программирование\studdentcpp\kurs\kurs\kurs.cpp(40): error C2143: синтаксическая ошибка: отсутствие ";" перед "<<"
+c:\users\андрей\desktop\программирование\studdentcpp\kurs\kurs\kurs.cpp(40): error C4430: отсутствует спецификатор типа - предполагается int. Примечание. C++ не поддерживает int по умолчанию
+c:\users\андрей\desktop\программирование\studdentcpp\kurs\kurs\kurs.cpp(41): error C2238: непредвиденные лексемы перед ";"
+c:\users\андрей\desktop\программирование\studdentcpp\kurs\kurs\kurs.cpp(23): fatal error C1903: не удается восстановить после предыдущих ошибок; остановка компиляции
