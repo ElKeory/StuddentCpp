@@ -1,2 +1,7 @@
 ﻿  kurs.cpp
-  kurs.vcxproj -> C:\Users\Андрей\Desktop\Программирование\StuddentCpp\kurs\Debug\kurs.exe
+c:\users\андрей\desktop\программирование\studdentcpp\kurs\kurs\kurs.cpp(166): error C3867: "std::basic_string<char,std::char_traits<char>,std::allocator<char>>::length": нестандартный синтаксис; используйте "&", чтобы создать указатель на член
+c:\users\андрей\desktop\программирование\studdentcpp\kurs\kurs\kurs.cpp(166): error C2446: <: нет преобразования "unsigned int (__thiscall std::basic_string<char,std::char_traits<char>,std::allocator<char>>::* )(void) noexcept const" в "int"
+  c:\users\андрей\desktop\программирование\studdentcpp\kurs\kurs\kurs.cpp(166): note: Не существует контекста, в котором такое преобразование возможно
+c:\users\андрей\desktop\программирование\studdentcpp\kurs\kurs\kurs.cpp(188): error C3867: "std::basic_string<char,std::char_traits<char>,std::allocator<char>>::length": нестандартный синтаксис; используйте "&", чтобы создать указатель на член
+c:\users\андрей\desktop\программирование\studdentcpp\kurs\kurs\kurs.cpp(188): error C2446: <: нет преобразования "unsigned int (__thiscall std::basic_string<char,std::char_traits<char>,std::allocator<char>>::* )(void) noexcept const" в "int"
+  c:\users\андрей\desktop\программирование\studdentcpp\kurs\kurs\kurs.cpp(188): note: Не существует контекста, в котором такое преобразование возможно

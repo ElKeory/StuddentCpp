@@ -6,25 +6,6 @@
 
 using namespace std;
 
-class Dictionary
-{
-public:
-	string KeyW, ValueW;
-
-	friend ostream& operator<<(ostream& out, Dictionary& w)
-	{
-		out << w.KeyW << " " << w.ValueW;
-		return out;
-	}
-
-	friend istream& operator>>(istream& in, Dictionary& w)
-	{
-		in >> w.KeyW >> w.ValueW;
-		return in;
-	}
-
-};
-
 template<class Key, class Value>
 class MyMap
 {
@@ -166,14 +147,13 @@ public:
 	}
 };
 
-int main()
+void choise()
 {
-	SetConsoleCP(1251);
-	SetConsoleOutputCP(1251);
-
 	MyMap<string, string> dictionary;
 
 	dictionary.download();
+
+	string key;
 
 	cout << "Выберите режим работы словаря:\n" << "1. Англо-Русский.\n" << "2. Русско-Английский.\n" << "3. Ввод слов.\n";
 	int c;
@@ -181,19 +161,66 @@ int main()
 
 	switch (c)
 	{
-	case 1:
+	case 1: 
+		cin >> key;
+		for (int i = 0; i < key.length; i++)
+		{
+			if (key[i] <= 'a' && key[i] >= 'z')
+			{
+				cout << key << " " << dictionary[key] << endl;
+			}
+			else
+			{
+				cout << "Слово в словаре не найдено.\n";
+			}
+		}
+
+		key.clear();
+
+		system("pause");
+		system("cls");
+
+		choise();
 		break;
 
 	case 2:
+		cin >> key;
+		for (int i = 0; i < key.length; i++)
+		{
+			if (key[i] <= 'а' && key[i] >= 'я')
+			{
+				cout << key << " " << dictionary[key] << endl;
+			}
+			else
+			{
+				cout << "Слово в словаре не найдено.\n";
+			}
+		}
+
+		key.clear();
+
+		system("pause");
+		system("cls");
+
+		choise();
 		break;
+		
 
 	case 3: cin >> dictionary;
+		dictionary.save();
+		choise();
 		break;
 
 	default: cout << "error\n";
-	}
+	}	
+}
 
-	dictionary.save();
+int main()
+{
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+
+	choise();
 
 	system("pause");
 	return 0;
