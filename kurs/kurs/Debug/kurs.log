@@ -1,7 +1,4 @@
 ﻿  kurs.cpp
-c:\users\андрей\desktop\программирование\studdentcpp\kurs\kurs\kurs.cpp(166): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\андрей\desktop\программирование\studdentcpp\kurs\kurs\kurs.cpp(189): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\андрей\desktop\программирование\studdentcpp\kurs\kurs\kurs.cpp(30): error C2512: MyMap<std::string,std::string>::pair: нет подходящего конструктора по умолчанию
-  c:\users\андрей\desktop\программирование\studdentcpp\kurs\kurs\kurs.cpp(28): note: при компиляции функции-члена "<Нет данных>" класса класс <Нет данных>
-  c:\users\андрей\desktop\программирование\studdentcpp\kurs\kurs\kurs.cpp(152): note: выполняется компиляция ссылки на экземпляр шаблон функции "MyMap<std::string,std::string>::MyMap(void)"
-  c:\users\андрей\desktop\программирование\studdentcpp\kurs\kurs\kurs.cpp(152): note: выполняется компиляция ссылки на экземпляр шаблон класс "MyMap<std::string,std::string>"
+c:\users\андрей\desktop\программирование\studdentcpp\kurs\kurs\kurs.cpp(171): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\андрей\desktop\программирование\studdentcpp\kurs\kurs\kurs.cpp(195): warning C4018: <: несоответствие типов со знаком и без знака
+  kurs.vcxproj -> C:\Users\Андрей\Desktop\Программирование\StuddentCpp\kurs\Debug\kurs.exe

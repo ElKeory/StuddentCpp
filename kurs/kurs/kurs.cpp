@@ -22,7 +22,7 @@ private:
 	pair* pairs;
 
 public:
-	MyMap() : size(100), length(0)
+	MyMap() : size(2), length(0)
 	{
 		pairs = new pair[size];
 	}
@@ -53,8 +53,9 @@ public:
 			{
 				pair* old = pairs;
 				pairs = new pair[size * 2];
-				memcpy(pairs, old, sizeof(pair) * size);
 				size *= 2;
+				memcpy(pairs, old, sizeof(pair) * size);
+				
 				delete[] old;
 			}
 		}
@@ -88,7 +89,7 @@ public:
 		return in;
 	}
 
-	Value& operator[](Key key)
+	Value operator[](Key key)
 	{
 		for (int i = 0; i < length; i++)
 		{
@@ -97,6 +98,8 @@ public:
 				return pairs[i].value;
 			}
 		}
+
+		return Value();
 	}
 
 	void save()
@@ -153,6 +156,8 @@ void choise()
 
 	dictionary.download();
 
+	cout << dictionary;
+
 	string key;
 
 	cout << "Выберите режим работы словаря:\n" << "1. Англо-Русский.\n" << "2. Русско-Английский.\n" << "3. Ввод слов.\n";
@@ -165,9 +170,10 @@ void choise()
 		cin >> key;
 		for (int i = 0; i < key.length(); i++)
 		{
-			if (key[i] <= 'a' && key[i] >= 'z')
+			if (key[i] > 'a' && key[i] < 'z')
 			{
 				cout << key << " " << dictionary[key] << endl;
+				break;
 			}
 			else
 			{
@@ -188,9 +194,10 @@ void choise()
 		cin >> key;
 		for (int i = 0; i < key.length(); i++)
 		{
-			if (key[i] <= 'а' && key[i] >= 'я')
+			if (key[i] > 'а' && key[i] < 'я')
 			{
 				cout << key << " " << dictionary[key] << endl;
+				break;
 			}
 			else
 			{
@@ -207,13 +214,16 @@ void choise()
 		choise();
 		break;
 		
+	case 3: 
+		cin >> dictionary;
 
-	case 3: cin >> dictionary;
 		dictionary.save();
+
 		choise();
 		break;
 
-	default: cout << "error\n";
+	default: 
+		cout << "error\n";
 	}	
 }
 
