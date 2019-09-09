@@ -22,7 +22,7 @@ private:
 	pair* pairs;
 
 public:
-	MyMap() : size(1), length(0)
+	MyMap() : size(100), length(0)
 	{
 		pairs = new pair[size];
 	}
@@ -55,7 +55,7 @@ public:
 				pairs = new pair[size * 2];
 				memcpy(pairs, old, sizeof(pair) * size);
 				size *= 2;
-				delete old;
+				delete[] old;
 			}
 		}
 
@@ -163,7 +163,7 @@ void choise()
 	{
 	case 1: 
 		cin >> key;
-		for (int i = 0; i < key.length; i++)
+		for (int i = 0; i < key.length(); i++)
 		{
 			if (key[i] <= 'a' && key[i] >= 'z')
 			{
@@ -172,6 +172,7 @@ void choise()
 			else
 			{
 				cout << "Слово в словаре не найдено.\n";
+				break;
 			}
 		}
 
@@ -185,7 +186,7 @@ void choise()
 
 	case 2:
 		cin >> key;
-		for (int i = 0; i < key.length; i++)
+		for (int i = 0; i < key.length(); i++)
 		{
 			if (key[i] <= 'а' && key[i] >= 'я')
 			{
@@ -194,6 +195,7 @@ void choise()
 			else
 			{
 				cout << "Слово в словаре не найдено.\n";
+				break;
 			}
 		}
 

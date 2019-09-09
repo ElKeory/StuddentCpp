@@ -1,2 +1,16 @@
+world
+мир
+shovel
+лопата
 pair
 пара
+ночь
+night
+choice
+выбор
+выбор
+choice
+ключ
+key
+ice
+лёд
