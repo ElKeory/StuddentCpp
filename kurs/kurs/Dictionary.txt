@@ -4,3 +4,12 @@ paint
 рисовать
 читать
 read
+door
+дверь
+ghost
+призрак
+дом
+house
+машина
+car
+

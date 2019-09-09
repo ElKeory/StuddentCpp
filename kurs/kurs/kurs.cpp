@@ -22,7 +22,7 @@ private:
 	pair* pairs;
 
 public:
-	MyMap() : size(2), length(0)
+	MyMap() : size(100), length(0)
 	{
 		pairs = new pair[size];
 	}
@@ -34,7 +34,7 @@ public:
 
 	bool un(Key key)
 	{
-		for (int i = 0; i < length; i++)
+		for (int i = 0; i < size; i++)
 		{
 			if (pairs[i].key == key)
 			{
@@ -155,8 +155,6 @@ void choise()
 	MyMap<string, string> dictionary;
 
 	dictionary.download();
-
-	cout << dictionary;
 
 	string key;
 
