@@ -14,6 +14,10 @@ private:
 	{
 		Key key;
 		Value value;
+
+		pair() {}
+		pair(const Key& key, const Value& value) :
+			key(key), value(value) {}
 	};
 
 	int size;
@@ -22,7 +26,7 @@ private:
 	pair* pairs;
 
 public:
-	MyMap() : size(100), length(0)
+	MyMap() : size(4), length(0)
 	{
 		pairs = new pair[size];
 	}
@@ -47,23 +51,16 @@ public:
 
 	void insert(Key key, Value value)
 	{
-		if (un(key))
+		if (!un(key))
+			return;
+		
+		if (length + 1 > size)
 		{
-			if (length == size)
-			{
-				pair* old = pairs;
-				pairs = new pair[size * 2];
-				size *= 2;
-				memcpy(pairs, old, sizeof(pair) * size);
-				
-				delete[] old;
-			}
+			size *= 2;
+			pairs = static_cast<pair*>(realloc(pairs, size * sizeof(pair)));				
 		}
-
-		pair temp;
-		temp.key = key;
-		temp.value = value;
-		pairs[length++] = temp;
+		
+		pairs[length++] = pair(key, value);
 	}
 
 	friend ostream& operator<<(ostream& out, MyMap& a)
@@ -156,21 +153,26 @@ void choise()
 
 	dictionary.download();
 
+	cout << dictionary;
+
 	string key;
 
 	cout << "Выберите режим работы словаря:\n" << "1. Англо-Русский.\n" << "2. Русско-Английский.\n" << "3. Ввод слов.\n";
 	int c;
 	cin >> c;
 
+	system("cls");
+
 	switch (c)
 	{
 	case 1: 
+		cout << "Введите слово на английском.\n";
 		cin >> key;
 		for (int i = 0; i < key.length(); i++)
 		{
 			if (key[i] > 'a' && key[i] < 'z')
 			{
-				cout << key << " " << dictionary[key] << endl;
+				cout << key << " : " << dictionary[key] << endl;
 				break;
 			}
 			else
@@ -189,12 +191,13 @@ void choise()
 		break;
 
 	case 2:
+		cout << "Введите слово на русском.\n";
 		cin >> key;
 		for (int i = 0; i < key.length(); i++)
 		{
 			if (key[i] > 'а' && key[i] < 'я')
 			{
-				cout << key << " " << dictionary[key] << endl;
+				cout << key << " : " << dictionary[key] << endl;
 				break;
 			}
 			else
@@ -213,9 +216,13 @@ void choise()
 		break;
 		
 	case 3: 
+		cout << "Введите пару слов.\n";
+
 		cin >> dictionary;
 
 		dictionary.save();
+
+		system("cls");
 
 		choise();
 		break;
@@ -232,6 +239,5 @@ int main()
 
 	choise();
 
-	system("pause");
 	return 0;
 }
