@@ -5,12 +5,13 @@ using System.Xml.Serialization;
 using System.Text.RegularExpressions;
 using System.Linq;
 using System.Globalization;
+using System.Threading.Tasks;
 using System.Runtime.Serialization;
-//using System.Runtime.Serialization.Json;
-//using System.Text.Json.Serialization;
-//using System.Text.Json;
-//using Newtonsoft.Json;
-//using JsonSerializer = Newtonsoft.Json.JsonSerializer;
+using System.Runtime.Serialization.Json;
+using System.Text.Json.Serialization;
+using System.Text.Json;
+using Newtonsoft.Json;
+using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace Lab01
 {
@@ -109,28 +110,8 @@ namespace Lab01
         }
     }
     public class Program
-    {
-        internal static int ResponseMenu(string Range)
-        {
-            string response;
-            do
-            {
-                response = Console.ReadLine();
-            }
-            while (!Regex.IsMatch(response, $@"^[{Range}]$"));
-            return Convert.ToInt32(response);
-        }
-        internal static int ResponseWorkers(string Range)
-        {
-            string response;
-            do
-            {
-                response = Console.ReadLine();
-            }
-            while (!Regex.IsMatch(response, $@"^[{Range}]$")) ;
-            return Convert.ToInt32(response);
-        }
-        internal static int ResponseChoseTypeOfFile(string Range)
+    {            
+        internal static int NumberInput(string Range)
         {
             string response;
             do
@@ -154,16 +135,6 @@ namespace Lab01
                 EditName(Separation[3].Substring(0, 1)) + "." + Convert.ToString(Company.Workers.Count + 1)
             });
         }
-        internal static string EditName(string Name)
-        {
-            TextInfo EditName = CultureInfo.CurrentCulture.TextInfo;
-            return EditName.ToTitleCase(Name);
-        }
-        internal static void AddHourlySalaryWorker()
-        {
-            Console.WriteLine("Введите: Профессию, ФИО, дату рождения: ");
-            HourlyDataSeparation(Console.ReadLine().Split(' '));          
-        }
         internal static void FixedDataSeparation(string[] Separation)
         {
             Company.Workers.Add(new FixedSalary
@@ -177,6 +148,16 @@ namespace Lab01
                 EditName(Separation[2].Substring(0, 1)) +
                 EditName(Separation[3].Substring(0, 1)) + "." + Convert.ToString(Company.Workers.Count + 1)
             });
+        }
+        internal static string EditName(string Name)
+        {
+            TextInfo EditName = CultureInfo.CurrentCulture.TextInfo;
+            return EditName.ToTitleCase(Name);
+        }
+        internal static void AddHourlySalaryWorker()
+        {
+            Console.WriteLine("Введите: Профессию, ФИО, дату рождения: ");
+            HourlyDataSeparation(Console.ReadLine().Split(' '));          
         }
         internal static void AddFixedSalaryWorker()
         {
@@ -195,10 +176,11 @@ namespace Lab01
         {
             Console.Clear();
             foreach (Person person in Company.Workers
-                    .OrderByDescending(person => person.Salary)
-                    .ThenBy(person => person.SecondName)
-                    .ThenBy(person => person.FirstName)
-                    .ThenBy(person => person.MiddleName).Take(5))
+                        .OrderByDescending(person => person.Salary)
+                        .ThenBy(person => person.SecondName)
+                        .ThenBy(person => person.FirstName)
+                        .ThenBy(person => person.MiddleName).Take(5))
+
             {
                 Console.WriteLine(person.ToString());
             }
@@ -223,7 +205,7 @@ namespace Lab01
                         "Добавить сотруднка с почасовой или фиксированной оплатой?\n" +
                         "1.С почасовой.\n" +
                         "2.С фиксированной.");
-            switch (ResponseWorkers("1-2"))
+            switch (NumberInput("1-2"))
             {
                 case 1:
                     AddHourlySalaryWorker();
@@ -234,27 +216,98 @@ namespace Lab01
             }
             Console.WriteLine("Сотрудник добавлен.\n");
         }
+
+        internal static void XmlInput()
+        {
+            XmlSerializer XmlInput = new XmlSerializer(typeof(Organisation));
+            try
+            {
+                using (FileStream Input = new FileStream("Workersxm.xml", FileMode.Open))
+                {
+                    Company = XmlInput.Deserialize(Input) as Organisation;
+                    Input.Close();
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Файл не найден или повреждён\n");
+                Menu();
+            }
+        }
+        internal static void JsonInput()
+        {
+            JsonSerializer JS = new JsonSerializer
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                TypeNameHandling = TypeNameHandling.Auto
+            };
+            try
+            {
+                using StreamReader SR = new StreamReader("Workersjs.json");
+                Company = JS.Deserialize<Organisation>(new JsonTextReader(SR));
+                SR.Close();
+            }
+            catch
+            {
+                Console.WriteLine("Файл не найден или повреждён\n");
+                Menu();
+            }
+        }
         internal static void ChoseTypeOfFileInput()
         {
             Console.Clear();
             Console.WriteLine("Из файла какого типа взять список сотрудников?\n" +
                     "1. Xml\n" +
                     "2. Json");
-            switch (ResponseChoseTypeOfFile("1-2"))
+            switch (NumberInput("1-2"))
             {
                 case 1:
-                    XmlSerializer XmlInput = new XmlSerializer(typeof(Organisation));
-                    using (FileStream Input = new FileStream("Workersxm.xml", FileMode.Open))
-                    {
-                        Company = XmlInput.Deserialize(Input) as Organisation;
-                        Input.Close();
-                    }
+                    XmlInput();
                     break;
                 case 2:
-                    Console.WriteLine("Nothing interesting\n");
+                    JsonInput();
                     break;
             }
-            Console.WriteLine("Данные загружены\n");
+            Console.WriteLine("Данные загружены.\n");
+        }
+        internal static void XmlOutput()
+        {
+            XmlSerializer XmlOutput = new XmlSerializer(typeof(Organisation));
+            try
+            {
+                using (FileStream Output = new FileStream("Workersxm.xml", FileMode.OpenOrCreate))
+                {
+                    XmlOutput.Serialize(Output, Company);
+                    Output.Flush();
+                    Output.Close();
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Файл не может быть открыт или создан.");
+                Menu();
+            }
+        }
+        internal static void JsonOutput()
+        {
+            JsonSerializer JS = new JsonSerializer
+            {
+                Formatting = Formatting.Indented,
+                NullValueHandling = NullValueHandling.Ignore,
+                TypeNameHandling = TypeNameHandling.Auto
+            };
+            try
+            {
+                using StreamWriter SW = new StreamWriter("Workersjs.json");
+                JS.Serialize(SW, Company);
+                SW.Flush();
+                SW.Close();
+            }
+            catch
+            {
+                Console.WriteLine("Файл не может быть открыт или создан.");
+                Menu();
+            }
         }
         internal static void ChoseTypeOfFileOutput()
         {
@@ -262,78 +315,69 @@ namespace Lab01
             Console.WriteLine("В какой тип файл какого типа добавить список сотрудников?\n" +
                     "1. Xml\n" +
                     "2. Json");
-            switch (ResponseChoseTypeOfFile("1-2"))
+            switch (NumberInput("1-2"))
             {
                 case 1:
-                    XmlSerializer XmlOutput = new XmlSerializer(typeof(Organisation));
-                    using (FileStream Output = new FileStream("Workersxm.xml", FileMode.OpenOrCreate))
-                    {
-                        XmlOutput.Serialize(Output, Company);
-                        Output.Flush();
-                        Output.Close();
-                    }
+                    XmlOutput();
                     break;
-                case 2: Console.WriteLine("Nothing interesting\n");
+                case 2:
+                    JsonOutput();
                     break;
             }
             Console.WriteLine("Данные добавлены в файл.\n");
         }
-        internal static void WorkersSort()
-        {
-            Console.Clear();
-            Console.WriteLine("Список сотрудников отсортирован.\n"); //!!!!!!!!!!!!!!!!!!!
-        }
         internal static void GetAverangeSalary()
         {
             Console.Clear();
+            Company.AverageSalary = 0;
+            foreach(Person salary in Company.Workers)
+            {
+                Company.AverageSalary += salary.Salary / Company.Workers.Count;
+            }
+            Console.WriteLine($"Средняя зарплата работников: {Math.Round(Company.AverageSalary, 2)}\n");
         }
         internal static void Menu()
         {
             Console.WriteLine("Меню:\n" +
-            "1. Упорядочивание сотрудников.\n" +
-            "2. Вывести первые 5 имен работников.\n" +
-            "3. Вывести последние 3 идентификатора работников.\n" +
-            "4. Показать среднюю заработную плату сотрудников.\n" +
-            "5. Взять список сотрудников из файла.\n" +
-            "6. Записать список сотрудников в файл.\n" +
-            "7. Добавить сотрудников.\n" +
-            "8. Вывести сотрудников.\n" +
-            "9. Выход из программы.");
-            switch (ResponseMenu("1-9"))
+            "1. Вывести первые 5 имен работников.\n" +
+            "2. Вывести последние 3 идентификатора работников.\n" +
+            "3. Показать среднюю заработную плату сотрудников.\n" +
+            "4. Взять список сотрудников из файла.\n" +
+            "5. Записать список сотрудников в файл.\n" +
+            "6. Добавить сотрудников.\n" +
+            "7. Вывести сотрудников.\n" +
+            "8. Выход из программы.");
+            switch (NumberInput("1-8"))
             {
                 case 1:
-                    WorkersSort();
-                    Menu();
-                    break;
-                case 2:
                     GetFiveWorkers();
                     Menu();
                     break;
-                case 3:
+                case 2:
                     GetThreeLastIdentification();
                     Menu();
                     break;
-                case 4:
+                case 3:
                     GetAverangeSalary();
                     Menu();
                     break;
-                case 5:
+                case 4:
                     ChoseTypeOfFileInput();
                     Menu();
                     break;
-                case 6:
+                case 5:
                     ChoseTypeOfFileOutput();
                     Menu();
                     break;
-                case 7:
+                case 6:
                     AddWorker();
                     Menu();
                     break;               
-                case 8:
+                case 7:
                     GetAllWorkers();
                     Menu();
                     break;
-                case 9:
+                case 8:
                     System.Environment.Exit(0);
                     break;
             }
